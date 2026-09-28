@@ -1,0 +1,238 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Camera AI — "quiet luxury": ngà ấm, mực đậm, xanh sapphire
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  --canvas: #f6f4ef;
+  --surface: #ffffff;
+  --surface-2: #fbfaf7;
+  --surface-3: #f1eee7;
+  --hairline: #e8e4db;
+  --hairline-2: #d8d3c7;
+
+  --ink: #16181d;
+  --ink-2: #4a4f58;
+  --ink-3: #878b93;
+
+  /* thương hiệu (xanh logo, trầm hơn cho giao diện) */
+  --brand: #1d3fb8;
+  --brand-2: #16318f;
+  --brand-soft: #eef1fb;
+  --gold: #a88547;
+
+  /* trạng thái — luôn đi kèm biểu tượng + chữ */
+  --critical: #b42318;
+  --critical-soft: #fdf1ef;
+  --warning: #b54708;
+  --warning-soft: #fdf5ec;
+  --success: #067647;
+  --success-soft: #ecf6f0;
+  --info: #175cd3;
+  --info-soft: #eff4fe;
+
+  /* dữ liệu: "nghi bắt nạt" (nhấn), còn lại trung tính */
+  --series-bullying: #eb6834;
+  --series-neutral: #c9c4b8;
+  --series-muted: #e3dfd6;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-hairline: var(--hairline);
+  --color-hairline-2: var(--hairline-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-soft: var(--brand-soft);
+  --color-gold: var(--gold);
+  --color-critical: var(--critical);
+  --color-critical-soft: var(--critical-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-bullying: var(--series-bullying);
+  --color-series-neutral: var(--series-neutral);
+  --color-series-muted: var(--series-muted);
+  --color-frame: #0e0f12;
+
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-serif: var(--font-display), Georgia, serif;
+
+  --shadow-soft: 0 1px 2px rgb(22 24 29 / 0.04), 0 6px 20px -6px rgb(22 24 29 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(22 24 29 / 0.04), 0 18px 40px -12px rgb(22 24 29 / 0.14);
+
+  --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-fade: fade-in 0.25s ease-out both;
+  --animate-breathe: breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes slide-in {
+  from { transform: translateX(28px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to { background-position: 400px 0; }
+}
+
+@keyframes ring {
+  0%, 100% { box-shadow: 0 0 0 2px var(--critical), 0 0 0 0 rgb(180 35 24 / 0.25); }
+  50% { box-shadow: 0 0 0 2px var(--critical), 0 0 0 8px rgb(180 35 24 / 0); }
+}
+
+html,
+body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--brand);
+  color: #fff;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline-2) transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* khung hộp thoại nhận focus khi mở: không vẽ viền */
+[role="dialog"]:focus-visible,
+[role="alertdialog"]:focus-visible {
+  outline: none;
+}
+
+@layer components {
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .display {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    font-variation-settings: "opsz" 60;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface-3) 0px, #f7f5f0 120px, var(--surface-3) 240px);
+    background-size: 800px 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+
+  .alarm-ring {
+    animation: ring 1.8s ease-in-out infinite;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hairline-divide > * + * {
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* số liệu lớn: chữ serif, số thẳng hàng */
+  .numeral {
+    font-family: var(--font-display), Georgia, serif;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  /* hạt nhiễu rất nhẹ cho mảng màu lớn (trang đăng nhập) */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.22;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* thông báo nổi (sonner) theo tông sáng */
+[data-sonner-toaster] [data-sonner-toast] {
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
