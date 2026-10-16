@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { RefreshCw } from "lucide-react";
+import { Info, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useConnection, useIsClient } from "@/lib/connection";
@@ -53,6 +53,22 @@ function ProfileSync() {
   return null;
 }
 
+/** Dòng nhắc cố định ở mọi trang: AI chỉ hỗ trợ, thầy cô trực ban vẫn là người quyết định. */
+function AiDisclaimer() {
+  return (
+    <p
+      role="note"
+      className="mb-6 flex items-start gap-2 rounded-2xl border border-hairline bg-surface-2 px-3.5 py-2.5 text-[12.5px] leading-snug text-ink-2 lg:mb-8 lg:items-center lg:rounded-full lg:py-2"
+    >
+      <Info className="mt-px size-3.5 shrink-0 text-ink-3 lg:mt-0" strokeWidth={1.75} />
+      <span>
+        <b className="font-medium text-ink">AI có thể bỏ sót hoặc báo nhầm.</b> Camera AI chỉ hỗ trợ, không thay thế thầy
+        cô trực ban.
+      </span>
+    </p>
+  );
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const isClient = useIsClient();
   const router = useRouter();
@@ -88,6 +104,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         )}
         <main className="mx-auto w-full max-w-350 flex-1 px-4 pt-6 pb-32 sm:px-6 lg:px-10 lg:pt-11 lg:pb-16">
+          <AiDisclaimer />
           {children}
         </main>
       </div>

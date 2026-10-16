@@ -148,6 +148,13 @@ function SchoolCard({ settings }: { settings: Settings }) {
           }}
         />
         {autoApprove && (
+          <Notice tone="warning" title="Đang mở cho mọi tài khoản Google">
+            Camera và video có hình ảnh học sinh. Chế độ này chỉ nên dùng khi trình diễn thử; khi dùng thật ở trường, hãy{" "}
+            <b>tắt công tắc trên</b> để chỉ tài khoản được nhà trường duyệt mới xem được (hoặc chỉ cho phép email của trường
+            trong mục “Tên miền email của trường”).
+          </Notice>
+        )}
+        {autoApprove && (
           <Field label="Quyền của tài khoản mới" hint="Có thể đổi quyền từng người trong danh sách Người dùng.">
             <Select
               value={defaultRole}

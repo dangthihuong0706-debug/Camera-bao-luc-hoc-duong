@@ -14,6 +14,7 @@ import {
   Plus,
   RadioTower,
   ScanFace,
+  ShieldQuestion,
 } from "lucide-react";
 
 import { CameraTile } from "@/components/camera/camera-tile";
@@ -81,6 +82,70 @@ function SystemCard() {
           </span>
           <ArrowRight className="size-4" />
         </Link>
+      )}
+    </Card>
+  );
+}
+
+/** AI báo đúng hay nhầm? Tính từ các lần thầy cô bấm "Đã xác nhận" / "Báo nhầm". */
+function AiReliabilityCard() {
+  const { data } = useStats(24);
+  const review = data?.events.ai_review;
+  if (!review) return <Skeleton className="h-56" />;
+  const rate = review.false_alarm_rate;
+  const segments = [
+    { key: "confirmed", label: "Đã xác nhận", n: review.confirmed, bar: "bg-critical" },
+    { key: "false", label: "Báo nhầm", n: review.false_alarm, bar: "bg-warning" },
+    { key: "resolved", label: "Đã xử lý", n: review.resolved, bar: "bg-ink-3" },
+    { key: "pending", label: "Chưa xem", n: review.pending, bar: "bg-hairline-2" },
+  ];
+  return (
+    <Card>
+      <CardHeader eyebrow="Độ tin cậy" title="AI báo đúng hay nhầm?" />
+      {review.total === 0 ? (
+        <p className="mt-4 text-[13.5px] leading-relaxed text-ink-2">
+          Chưa có sự việc nào do AI phát hiện. Khi thầy cô bấm <b className="font-medium text-ink">Đã xác nhận</b> hoặc{" "}
+          <b className="font-medium text-ink">Báo nhầm</b> ở mỗi sự việc, tỉ lệ báo nhầm sẽ hiện ở đây.
+        </p>
+      ) : (
+        <>
+          <div className="mt-4 flex items-end gap-4">
+            <div className="flex items-baseline gap-1">
+              <span className={cn("numeral text-[44px] leading-none", rate != null && rate >= 50 ? "text-warning" : "text-ink")}>
+                {rate == null ? "—" : Math.round(rate)}
+              </span>
+              {rate != null && <span className="text-lg text-ink-3">%</span>}
+            </div>
+            <p className="pb-1 text-[13px] leading-snug text-ink-2">
+              {rate == null
+                ? "chưa có sự việc nào được đánh giá"
+                : `báo nhầm · ${review.false_alarm}/${review.judged} sự việc thầy cô đã đánh giá`}
+            </p>
+          </div>
+          <div
+            className="mt-5 flex h-2 overflow-hidden rounded-full bg-surface-3"
+            role="img"
+            aria-label={segments.map((x) => `${x.label} ${x.n}`).join(", ")}
+          >
+            {segments.map((x) => (
+              <span key={x.key} className={x.bar} style={{ width: `${(x.n / review.total) * 100}%` }} />
+            ))}
+          </div>
+          <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12.5px]">
+            {segments.map((x) => (
+              <li key={x.key} className="flex items-center gap-2 text-ink-2">
+                <span className={cn("size-2 rounded-full", x.bar)} />
+                {x.label}
+                <span className="ml-auto text-ink tabular">{x.n}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 flex gap-2 border-t border-hairline pt-3.5 text-[12px] leading-relaxed text-ink-3">
+            <ShieldQuestion className="mt-0.5 size-3.5 shrink-0" strokeWidth={1.75} />
+            Tính từ lựa chọn của thầy cô, chỉ với sự việc do AI phát hiện. Càng nhiều sự việc được ghi nhận, con số càng
+            đúng; AI cũng có thể bỏ sót những lần không báo.
+          </p>
+        </>
       )}
     </Card>
   );
@@ -311,6 +376,8 @@ export function DashboardView() {
               )}
             </div>
           </Card>
+
+          <AiReliabilityCard />
 
           <CaptureCard />
 

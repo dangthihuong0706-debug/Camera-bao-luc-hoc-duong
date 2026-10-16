@@ -1,4 +1,5 @@
-export type CameraState = "online" | "connecting" | "error" | "offline";
+/** waiting: camera từ máy khác đang chờ máy đó phát hình */
+export type CameraState = "online" | "connecting" | "error" | "offline" | "waiting";
 
 export interface Analysis {
   class: string;
@@ -69,8 +70,12 @@ export interface Camera {
   recording: RecordingStatus | null;
   error: string;
   speech: SpeechStatus;
-  /** "phone" = điện thoại/laptop đang quay bằng trang "Quay tại chỗ", "webcam" = webcam gắn vào máy chủ */
-  source?: "rtsp" | "phone" | "webcam";
+  /** "phone" = điện thoại/laptop đang quay bằng trang "Quay tại chỗ", "webcam" = webcam gắn vào máy chủ,
+   *  "remote" = webcam trên máy của quản trị viên, phát lên từ trang "Phát camera" */
+  source?: "rtsp" | "phone" | "webcam" | "remote";
+  /** Camera do máy cầu nối ở trường gửi hình (rỗng nếu không phải) */
+  bridge_id?: string;
+  bridge_name?: string;
   virtual?: boolean;
   owner?: string;
 }
@@ -277,6 +282,18 @@ export interface StatsOverview {
     needs_review: number;
     today: number;
     by_status: Partial<Record<ReviewStatus, number>>;
+    /** Phản hồi của thầy cô về các sự việc do AI phát hiện (từ trước đến nay) */
+    ai_review?: {
+      total: number;
+      pending: number;
+      confirmed: number;
+      false_alarm: number;
+      resolved: number;
+      /** Số sự việc thầy cô đã chọn "Đã xác nhận" hoặc "Báo nhầm" */
+      judged: number;
+      /** % báo nhầm trong số đã đánh giá; null nếu chưa có đánh giá nào */
+      false_alarm_rate: number | null;
+    };
     by_type: Partial<Record<EventType, number>>;
     by_severity: Partial<Record<Severity, number>>;
     by_camera: { camera_id: string; camera_name: string; n: number }[];
@@ -404,4 +421,15 @@ export interface RtspProbe {
   has_audio?: boolean;
   audio_codec?: string;
   snapshot?: string;
+}
+
+/** Máy cầu nối: máy tính ở trường đọc camera IP trong mạng trường và gửi hình về máy chủ */
+export interface Bridge {
+  id: string;
+  name: string;
+  created_at: number;
+  last_seen: number | null;
+  version: string;
+  streaming: number;
+  cameras: { id: string; name: string; location: string; key: string; enabled: boolean; state: CameraState }[];
 }
